@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>شبیه‌ساز سلول گالوانی · جاوید</title>
+<style>
+:root{--bg:#f7f6f2;--fg:#1d2433;--mut:#6b7280;--card:#fff;--ac:#2f6fed;--neg:#2563eb;--pos:#e5484d;--gl:#9aa3b5;--ok:#15803d;--warn:#b45309;--ra:rgba(37,99,235,.18);--rc:rgba(229,72,77,.18);
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#14171f;--fg:#eef0f5;--mut:#9aa3b5;--card:#1e2330;--ac:#6c9bff;--neg:#6c9bff;--pos:#ff6b70;--gl:#5b6478;--ok:#4ade80;--warn:#fbbf24;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#14171f;--fg:#eef0f5;--mut:#9aa3b5;--card:#1e2330;--ac:#6c9bff;--neg:#6c9bff;--pos:#ff6b70;--gl:#5b6478;--ok:#4ade80;--warn:#fbbf24;color-scheme:dark}
+html,body{margin:0;background:var(--bg);color:var(--fg);font-family:Vazirmatn,Tahoma,system-ui,sans-serif}
+.wrap{max-width:820px;margin:0 auto;padding:14px}
+h1{font-size:1.1rem;margin:2px 0 2px}
+.by{font-size:.85rem;color:var(--mut);margin-bottom:10px}
+.card{background:var(--card);border-radius:14px;padding:10px;box-shadow:0 1px 6px rgba(0,0,0,.12);margin-bottom:12px}
+canvas{width:100%;height:auto;display:block}
+.row{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin:6px 0}
+label{font-size:.9rem}
+select{font:inherit;padding:5px 8px;border-radius:8px;background:var(--bg);color:var(--fg);border:1px solid var(--gl);max-width:100%}
+input[type=range]{flex:1;min-width:150px}
+.big{font-size:1.2rem;font-weight:700;color:var(--ok)}
+.eq{direction:rtl;unicode-bidi:plaintext;text-align:start;font-size:.95rem;margin:3px 0;overflow-x:auto;white-space:nowrap}
+#no,#nq{white-space:normal}
+.tag{font-size:.8rem;color:var(--mut)}
+.nb{border:1px dashed var(--warn);border-radius:10px;padding:8px;margin-top:8px}
+.nb b,.warn{color:var(--warn)}
+.note{font-size:.8rem;color:var(--mut);line-height:1.7}
+.tw{overflow-x:auto}
+table{border-collapse:collapse;width:100%;font-size:.85rem}
+td,th{padding:4px 8px;border-bottom:1px solid var(--gl);text-align:center}
+td.h{direction:ltr}
+tr.ra{background:var(--ra)}tr.rc{background:var(--rc)}
+th{color:var(--mut);font-weight:600}
+.tban{background:rgba(180,83,9,.14);color:var(--warn);font-weight:700;padding:7px 12px;border-radius:8px;margin-bottom:8px}
+.tbody{font-size:.95rem;line-height:1.9;margin:6px 0 10px}
+.tres{font-size:1.05rem;font-weight:700;margin:10px 0 4px}
+</style>
+</head>
+<body>
+<div class="wrap">
+<h1>شبیه‌ساز سلول گالوانی</h1>
+<div class="by">جاوید_گروه شیمی استان کرمان</div>
+<div class="card">
+<div id="vcell"><canvas id="c" width="640" height="340"></canvas></div><div id="vtheory" style="display:none"></div><div id="vex12" style="display:none"></div>
+<div class="row"><label>نیم‌سلول اول: <select id="s1"></select></label><label>نیم‌سلول دوم: <select id="s2"></select></label></div>
+<div id="vslider"><div class="row"><label for="pr">پیشرفت واکنش:</label><input type="range" id="pr" min="0" max="100" value="0"><span class="tag" id="prv">0٪</span></div>
+<div class="tag">تعداد و موقعیت ذره‌ها و الکترون‌ها نمادین است و مقیاس واقعی ندارد. فقط برای زوج فلز ـ یون فلزی (مثل Zn/Cu): جرم الکترود آند کم و جرم الکترود کاتد زیاد می‌شود. برای الکترودهای دیگر (گازی یا SiO₂/Si) تغییر جرم نمایش داده نمی‌شود؛ برای زوج فلز ـ یون فلزی، یون فلز در محلول آند بیشتر و در محلول کاتد کمتر می‌شود؛ در نیم‌سلول‌های دیگر روند هر یون از نیم‌واکنش آن تعیین می‌شود (مثلاً OH⁻ در کاتد تولید و در آند مصرف می‌شود). نسبت تغییر ذره‌ها با ضرایب واکنش همسو است، اما تعداد آن‌ها شماتیک است. لامپ فقط نشانه‌ی عبور جریان است، نه شدت واقعی روشنایی. دایره‌های با نام یون، یون‌های داخل محلول‌اند؛ علامت‌های + و − روی ذره‌های کوچکی که از دیواره‌ی متخلخل می‌گذرند، نمایش عمومی کاتیون‌ها و آنیون‌ها هستند، نه لزوماً یک یون مشخص.<br><b>توجه:</b> عدد زیر لامپ emf سلول است، نه ولتاژ دو سر لامپ. E° مربوط به شرایط استاندارد (همه‌ی غلظت‌ها ۱ مولار) است. در سلول واقعی با پیشرفت واکنش، غلظت‌ها تغییر می‌کند و emf کم می‌شود تا در تعادل به صفر برسد. این لغزنده emf را تغییر نمی‌دهد.</div></div>
+</div>
+<div class="card">
+<div class="row" id="rcond"><span class="tag" id="cond"></span></div>
+<div class="row" id="remf"><span id="elab"></span><span class="big" id="emf" dir="ltr" style="unicode-bidi:isolate"></span></div>
+<div class="eq" id="ea"></div><div class="eq" id="ec"></div><div class="eq" id="en"></div><div class="eq" id="no"></div>
+<div id="why" class="tag"></div><div id="flip" class="tag warn"></div><div id="med" class="tag warn"></div>
+<div class="nb">
+<label><input type="checkbox" id="ne"> <b>حالت دانشگاهی (معادله‌ی نرنست)</b> <span class="tag">خارج از سطح کتاب درسی</span></label>
+<div class="tag" id="nnote"></div>
+<div id="nbox" style="display:none">
+<div class="row"><label id="l1"></label><input type="range" id="r1" min="-2" max="0.3" step="0.01" value="0"><span class="tag" id="v1"></span></div>
+<div class="row"><label id="l2"></label><input type="range" id="r2" min="-2" max="0.3" step="0.01" value="0"><span class="tag" id="v2"></span></div>
+<div class="eq" id="nq"></div>
+</div></div>
+</div>
+<div class="card"><b>حالت پیش‌بینی</b> <span class="tag">قبل از کشیدن لغزنده، پیش‌بینی کنید و بعد بررسی کنید.</span>
+<div id="pnote" class="tag" style="display:none">فقط برای زوج فلز ـ یون فلزی (مثل Zn و Cu) فعال است.</div>
+<div id="pq">
+<div class="row"><label>۱) جرم کدام الکترود کم می‌شود؟ <select id="p1"></select></label></div>
+<div class="row"><label>۲) الکترون‌ها در سیم رابط از کدام الکترود به کدام می‌روند؟ <select id="p2"></select></label></div>
+<div class="row"><label>۳) غلظت کدام یون در محلول افزایش می‌یابد؟ <select id="p3"></select></label></div>
+<div class="row"><button id="pchk" style="font:inherit;padding:6px 14px;border-radius:8px;border:0;background:var(--ac);color:#fff;cursor:pointer">بررسی پاسخ</button></div>
+<div id="pres" style="font-size:.9rem;line-height:1.9"></div></div></div>
+<div class="card"><div class="tag" style="margin-bottom:6px">پتانسیل کاهشی استاندارد: جدول ۱ کتاب (ص ۴۷) و نیم‌واکنش‌های تمرین‌ها (ص ۵۳ و ۶۵). ردیف آند آبی و ردیف کاتد قرمز است.</div>
+<div class="tw"><table id="tb"></table></div></div>
+<div class="note">مقدارها از کتاب شیمی ۳ وارد شده‌اند. نیم‌واکنش O₂/H⁺ در کتاب ناموازنه آمده و در اینجا موازنه شده است. <span id="cnote">نمایش قراردادی سلول (مثل Zn | Zn²⁺ ‖ Cu²⁺ | Cu) تکمیلی است.</span></div>
+</div>
+<script>
+const mk=(k,name,lhs,rhs,z,E,kind,el,sol,lab,na,nc)=>({k,name,lhs,rhs,z,E,kind,el,sol,lab,na,nc,pt:kind!='m'&&k!='Si',gas:k=='H'||k=='OH'||k=='O2',ion:k=='OH'?'OH⁻':kind=='m'?lhs[0][1]:'H⁺',side:k=='OH'?'R':'L',neg:k=='OH'});
+const m=(k,name,ion,sym,z,E,el,sol)=>mk(k,name,[[1,ion]],[[1,sym]],z,E,'m',el,sol,sym+' | '+ion,sym+'(s) | '+ion+'(aq)',ion+'(aq) | '+sym+'(s)');
+const BOOK=[m('Au','طلا','Au³⁺','Au',3,1.50,'#d4af37','#f2d16b'),m('Pt','پلاتین','Pt²⁺','Pt',2,1.20,'#c9ced6'),m('Ag','نقره','Ag⁺','Ag',1,0.80,'#d7dbe0'),m('Cu','مس','Cu²⁺','Cu',2,0.34,'#c8794b','#3b82f6'),
+mk('H','هیدروژن (SHE)',[[2,'H⁺']],[[1,'H₂']],2,0,'g','#8a8f99',null,'Pt | H⁺/H₂','Pt(s) | H₂(g) | H⁺(aq)','H⁺(aq) | H₂(g) | Pt(s)'),
+m('Sn','قلع','Sn²⁺','Sn',2,-0.14,'#a8adb5'),m('Fe','آهن','Fe²⁺','Fe',2,-0.44,'#7d8591','#a9d9a0'),m('Zn','روی','Zn²⁺','Zn',2,-0.76,'#9fb0c4'),m('Mn','منگنز','Mn²⁺','Mn',2,-1.18,'#a58fa5','#f4b9c7'),m('Al','آلومینیوم','Al³⁺','Al',3,-1.66,'#c3cbd6'),m('Mg','منیزیم','Mg²⁺','Mg',2,-2.37,'#b8c0cc')];
+const EXTRA=[mk('Si','SiO₂ / Si (اسیدی)',[[1,'SiO₂'],[4,'H⁺']],[[1,'Si'],[2,'H₂O']],4,-0.84,'x','#4b5563',null,'Si | SiO₂','Si(s) | SiO₂(s), H⁺(aq)','SiO₂(s), H⁺(aq) | Si(s)'),
+mk('OH','H₂O / H₂ (محیط بازی)',[[2,'H₂O']],[[1,'H₂'],[2,'OH⁻']],2,-0.83,'x','#8a8f99',null,'Pt | H₂O/OH⁻','Pt(s) | H₂(g) | OH⁻(aq)','OH⁻(aq) | H₂(g) | Pt(s)'),
+mk('O2','O₂ / H₂O (اسیدی)',[[1,'O₂'],[4,'H⁺']],[[2,'H₂O']],4,1.23,'x','#8a8f99',null,'Pt | O₂/H₂O','Pt(s) | H₂O(l) | O₂(g), H⁺(aq)','O₂(g), H⁺(aq) | H₂O(l) | Pt(s)')];
+const K={};[...BOOK,...EXTRA].forEach(x=>K[x.k]=x);
+const $=i=>document.getElementById(i),gcd=(a,b)=>b?gcd(b,a%b):a,lcm=(a,b)=>a*b/gcd(a,b);
+const sg=e=>(e>0?'+':e<0?'−':'')+Math.abs(e).toFixed(2);
+const s1=$('s1'),s2=$('s2');
+for(const s of[s1,s2]){const g1=document.createElement('optgroup');g1.label='جدول ۱ کتاب';BOOK.forEach(x=>g1.appendChild(new Option(x.name+'  E°='+sg(x.E),x.k)));
+const g2=document.createElement('optgroup');g2.label='نیم‌واکنش‌های تمرین‌های کتاب';EXTRA.forEach(x=>g2.appendChild(new Option(x.name+'  E°='+sg(x.E),x.k)));s.append(g1,g2)}
+s1.value='Zn';s2.value='Cu';
+const fmt=(c,s)=>(c==1?'':c)+s,side=(l,mu)=>l.map(([c,s])=>fmt(c*mu,s)).join(' + ');
+const mp=(l,mu)=>{const o={};l.forEach(([c,s])=>o[s]=(o[s]||0)+c*mu);return o},add=(a,b)=>{const o={...a};for(const s in b)o[s]=(o[s]||0)+b[s];return o};
+$('tb').innerHTML='<tr><th>نیم‌واکنش کاهش</th><th>E° (V)</th></tr>'+[...BOOK,...EXTRA].map(x=>'<tr id="r_'+x.k+'"><td class="h">'+side(x.lhs,1)+' + '+x.z+'e⁻ → '+side(x.rhs,1)+'</td><td dir="ltr">'+sg(x.E)+'</td></tr>').join('');
+const cx=$('c').getContext('2d'),col=n=>getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+let st={};
+function calc0(f){
+ const k1=s1.value,k2=s2.value;st.same=k1==k2;st.S=statusOf(k1,k2);const GB=st.S.g==='B';
+ let an=K[k1].E<=K[k2].E?k1:k2,ca=an==k1?k2:k1;if(st.same){an=k1;ca=k2}
+ if(f&&!st.same)[an,ca]=[ca,an];
+ const A=K[an],C=K[ca];st.A=A;st.C=C;st.flip=!!f;
+ for(const k in K)$('r_'+k).className=st.same?'':k==an?'ra':k==ca?'rc':'';
+ const n=lcm(A.z,C.z),ma=n/A.z,mc=n/C.z;st.ma=ma;st.mc=mc;
+ st.E0=C.E-A.E;
+ const ok=A.kind=='m'&&C.kind=='m';$('ne').disabled=!ok;if(!ok)$('ne').checked=false;
+ $('nnote').textContent=ok?'':'فقط برای زوج فلز ـ یون فلزی فعال است؛ چون غلظت H⁺ و فشار H₂ در این شبیه‌ساز متغیر نیستند.';
+ const nbx=$('ne').checked;$('nbox').style.display=nbx?'block':'none';
+ const c1=Math.pow(10,+$('r1').value),c2=Math.pow(10,+$('r2').value);
+ $('v1').textContent=c1.toFixed(2)+' M';$('v2').textContent=c2.toFixed(2)+' M';
+ 
+ $('l1').innerHTML='غلظت '+K[k1].lhs[0][1]+' (نیم‌سلول اول):';$('l2').innerHTML='غلظت '+K[k2].lhs[0][1]+' (نیم‌سلول دوم):';
+ $('r1').disabled=K[k1].kind!='m';$('r2').disabled=K[k2].kind!='m';
+ const cOf=k=>K[k].kind=='m'?(k==k1?c1:c2):1,ca1=cOf(an),cc1=cOf(ca);
+ st.Q=ok?Math.pow(ca1,ma*A.lhs[0][0])/Math.pow(cc1,mc*C.lhs[0][0]):1;
+ st.E=nbx&&!st.same?st.E0-(0.0592/n)*Math.log10(st.Q):st.E0;if(st.same)st.E=0;
+ if(nbx&&!st.same&&st.E<0&&!f){return calc(true)}
+ $('cond').textContent=nbx&&!st.same?'با غلظت‌های انتخاب‌شده (غیراستاندارد):':'در شرایط استاندارد (۲۵°C، ۱ مولار، ۱ atm):';
+ $('elab').textContent=nbx&&!st.same?'E سلول =':(st.S.g==='EX12'?'emf = E°کاتد − E°آند =':'E°سلول = E°کاتد − E°آند =');
+ $('emf').textContent=(st.same?'0.00':st.E.toFixed(2))+' V';
+ $('flip').textContent=f?'با این غلظت‌ها جهت واکنش برعکس می‌شود، پس نقش آند و کاتد جابه‌جا شده است.':'';
+  if(st.same){['ea','ec','en','no','nq'].forEach(i=>$(i).textContent='');$('why').textContent='دو نیم‌سلول یکسان‌اند؛ اختلاف پتانسیل صفر است. دو نیم‌سلول متفاوت انتخاب کنید.';return}
+ const ne=n==1?'e⁻':n+'e⁻';
+ $('ea').textContent=(GB?'نیم‌واکنش اکسایش:  ':'آند (−)، اکسایش:  ')+'\u2066'+side(A.rhs,ma)+' → '+side(A.lhs,ma)+' + '+ne+'\u2069';
+ $('ec').textContent=(GB?'نیم‌واکنش کاهش:  ':'کاتد (+)، کاهش:  ')+'\u2066'+side(C.lhs,mc)+' + '+ne+' → '+side(C.rhs,mc)+'\u2069';
+ const L=add(mp(A.rhs,ma),mp(C.lhs,mc)),R=add(mp(A.lhs,ma),mp(C.rhs,mc));
+ for(const s in L)if(s in R){const q=Math.min(L[s],R[s]);L[s]-=q;R[s]-=q}
+ const gg=[...Object.values(L),...Object.values(R)].filter(v=>v>0).reduce((a,b)=>gcd(a,b),0)||1,str=o=>Object.entries(o).filter(e=>e[1]>0).map(e=>fmt(e[1]/gg,e[0])).join(' + ');
+ $('en').textContent='واکنش کلی:  \u2066'+str(L)+' → '+str(R)+'\u2069';
+ $('no').textContent='نمایش قراردادی (تکمیلی):  \u2066'+A.na+'  ||  '+C.nc+'\u2069';
+ $('why').textContent=''+(nbx?'آند، الکترودی است که اکسایش در آن رخ می‌دهد؛ جهت واکنش با توجه به E و غلظت‌ها تعیین می‌شود. ':'الکترود با E° کمتر آند است. ')+'الکترون‌ها از آند به کاتد از طریق سیم رابط می‌روند؛ کاتیون‌ها از نیم‌سلول آند به کاتد و آنیون‌ها از نیم‌سلول کاتد به آند، از دیواره‌ی متخلخل می‌گذرند.';
+ $('nq').textContent=nbx?'Q = '+st.Q.toPrecision(3)+'   ،   E = E° − (0.0592/'+n+')·logQ = '+st.E.toFixed(3)+' V':'';
+}
+['s1','s2','ne','r1','r2'].forEach(i=>$(i).addEventListener('input',()=>calc()));
+s1.addEventListener('change',()=>calc());s2.addEventListener('change',()=>calc());
+$('pr').addEventListener('input',()=>{$('prv').textContent=$('pr').value+'٪'});
+const X1=230,X2=410,WL=320;
+function badge(){cx.font='bold 13px sans-serif';cx.textAlign='center';const t='نمایش مفهومی',w=cx.measureText(t).width+16;cx.strokeStyle=col('--gl');cx.lineWidth=1.5;cx.strokeRect(8,6,w,24);cx.fillStyle=col('--mut');cx.fillText(t,8+w/2,23)}
+function tg(t,x,y){cx.font='11px sans-serif';cx.textAlign='center';const w=cx.measureText(t).width+10;cx.globalAlpha=.9;cx.fillStyle=col('--card');cx.fillRect(x-w/2,y-12,w,17);cx.globalAlpha=1;cx.fillStyle=col('--fg');cx.fillText(t,x,y)}
+function beaker(x0,X,role,p,T,idx){
+ const g=col('--gl'),fg=col('--fg');
+ const f=role=='an'?1+.6*p:1-.4*p;
+ cx.fillStyle='rgba(120,170,255,.12)';cx.fillRect(x0-90,170,180,130);
+ if(X.sol){cx.globalAlpha=Math.max(.05,Math.min(.55,.12+.25*f));cx.fillStyle=X.sol;cx.fillRect(x0-90,170,180,130);cx.globalAlpha=1}
+ cx.strokeStyle=g;cx.lineWidth=3;cx.beginPath();cx.moveTo(x0-90,120);cx.lineTo(x0-90,300);cx.lineTo(x0+90,300);cx.lineTo(x0+90,120);cx.stroke();
+ const w=X.kind!='m'?20:role=='an'?22*(1-.75*p):22*(1+.9*p);
+ cx.fillStyle=X.el;cx.fillRect(x0-w/2,100,w,170);cx.strokeStyle=fg;cx.lineWidth=1;cx.strokeRect(x0-w/2,100,w,170);if(X.kind=='m'&&p>0&&!st.same){tg(role=='an'?'جرم ↓':'جرم ↑',x0,150)}
+ const gp=(role=='ca'&&X.k!='O2')||(role=='an'&&X.k=='O2');if(X.gas&&p>0&&!st.same&&!gp){tg('گاز مصرف می‌شود',x0,160)}if(X.gas&&p>0&&!st.same&&gp){for(let i=0;i<6;i++){const ph=(T*.7+i/6)%1;cx.fillStyle='rgba(220,230,255,.8)';cx.beginPath();cx.arc(x0+Math.sin(i*5+T*3)*10,265-ph*110,3,0,7);cx.fill()}}
+ cx.fillStyle=fg;cx.font='bold 14px sans-serif';cx.textAlign='center';cx.fillText('\u2066'+X.lab+'\u2069',x0,322);cx.font='10px sans-serif';cx.fillStyle=col('--mut');cx.fillText(idx,x0,336)}
+function arrow(x1,x2,y){const d=x2>x1?1:-1;cx.beginPath();cx.moveTo(x1,y);cx.lineTo(x2,y);cx.lineTo(x2-6*d,y-4);cx.moveTo(x2,y);cx.lineTo(x2-6*d,y+4);cx.stroke()}
+function draw(T){
+ cx.clearRect(0,0,640,340);if(!st.A)return;if(st.S&&(st.S.g==='B'||st.S.g==='EX12'))return;if(st.S&&st.S.g==='A')badge();
+ const p=$('pr').value/100,fg=col('--fg'),ok=!st.same&&st.E>0,pp=ok?p:0;
+ const a1=st.same||st.A.k===s1.value;beaker(X1,st.A,'an',pp,T,a1?'(انتخاب اول)':'(انتخاب دوم)');beaker(X2,st.C,'ca',pp,T,a1?'(انتخاب دوم)':'(انتخاب اول)');
+ // دیواره‌ی متخلخل
+ cx.strokeStyle=col('--gl');cx.lineWidth=3;cx.setLineDash([6,5]);cx.beginPath();cx.moveTo(WL,150);cx.lineTo(WL,300);cx.stroke();cx.setLineDash([]);
+ cx.fillStyle=fg;cx.font='11px sans-serif';cx.textAlign='center';cx.fillText('دیواره‌ی متخلخل',WL,142);
+ // سیم رابط
+ cx.strokeStyle=fg;cx.lineWidth=2.5;cx.beginPath();cx.moveTo(X1,100);cx.lineTo(X1,60);cx.lineTo(296,60);cx.moveTo(344,60);cx.lineTo(X2,60);cx.lineTo(X2,100);cx.stroke();
+ // لامپ
+ const lit=ok?1:0;
+ cx.fillStyle='rgba(255,213,74,'+(.15+.8*lit)+')';cx.beginPath();cx.arc(WL,60,24,0,7);cx.fill();cx.strokeStyle=fg;cx.beginPath();cx.arc(WL,60,24,0,7);cx.stroke();
+ cx.beginPath();cx.moveTo(WL-8,66);cx.lineTo(WL-4,54);cx.lineTo(WL,66);cx.lineTo(WL+4,54);cx.lineTo(WL+8,66);cx.stroke();
+ cx.fillStyle=fg;cx.font='bold 12px sans-serif';cx.fillText(($('ne').checked?'E = ':'E°cell = ')+Math.max(st.E,0).toFixed(2)+' V',WL,100);
+ if(st.same)return;
+ cx.font='bold 13px sans-serif';
+ cx.fillStyle=col('--neg');cx.fillText('آند (−) · اکسایش',X1-62,90);
+ cx.fillStyle=col('--pos');cx.fillText('کاتد (+) · کاهش',X2+62,90);
+ if(!ok)return;
+ const sp=Math.min(1,st.E/2)*70+20;
+ const P1=[[X1,100],[X1,60],[X2,60],[X2,100]];
+ const seg=(P,s)=>{let d=0;for(let k=0;k<P.length-1;k++){const dx=P[k+1][0]-P[k][0],dy=P[k+1][1]-P[k][1],l=Math.hypot(dx,dy);if(s<=d+l){const u=(s-d)/l;return[P[k][0]+dx*u,P[k][1]+dy*u]}d+=l}return null};
+ cx.font='bold 10px sans-serif';
+ for(let i=0;i<8;i++){const s=((i/8)*260+T*sp)%260;
+  for(const P of[P1]){const q=seg(P,s);if(q){cx.fillStyle=col('--neg');cx.beginPath();cx.arc(q[0],q[1],5,0,7);cx.fill();cx.fillStyle='#fff';cx.fillText('−',q[0],q[1]+3.5)}}}
+ // یون‌های تجمع‌یافته در محلول‌ها (نمادین، متناسب با پیشرفت)
+ const inc=(X,r)=>r=='an'?X.side=='L':X.side=='R',co=X=>([...X.lhs,...X.rhs].find(t=>t[1]==X.ion)||[1])[0],rA=co(st.A)*st.ma,rC=co(st.C)*st.mc,sc=Math.min(1,3/Math.max(rA,rC)),cnt=(X,r)=>{const d=Math.round(p*sc*(r=='an'?rA:rC));return inc(X,r)?4+d:4-d},na=cnt(st.A,'an'),nc=cnt(st.C,'ca'),ion=(bx,by,t,c)=>{cx.fillStyle=c;cx.beginPath();cx.arc(bx,by,11,0,7);cx.fill();cx.fillStyle='#fff';cx.font='bold 9px sans-serif';cx.textAlign='center';cx.fillText('\u2066'+t+'\u2069',bx,by+3)};
+ for(let i=0;i<na;i++)ion(X1-76+(i%3)*26,288-Math.floor(i/3)*24,st.A.ion,col(st.A.neg?'--neg':'--pos'));
+ for(let i=0;i<nc;i++)ion(X2+28+(i%3)*26,288-Math.floor(i/3)*24,st.C.ion,col(st.C.neg?'--neg':'--pos'));
+ // عبور یون‌ها از دیواره
+ for(let i=0;i<5;i++){const u=((i/5)+T*sp/260)%1,y=190+i*20;
+  let bx=WL-26+u*52;cx.fillStyle=col('--pos');cx.beginPath();cx.arc(bx,y,5,0,7);cx.fill();cx.fillStyle='#fff';cx.fillText('+',bx,y+3.5);
+  bx=WL+26-((u+.5)%1)*52;cx.fillStyle=col('--neg');cx.beginPath();cx.arc(bx,y+10,5,0,7);cx.fill();cx.fillStyle='#fff';cx.fillText('−',bx,y+13.5)}
+ cx.strokeStyle=fg;cx.lineWidth=1.5;cx.fillStyle=fg;cx.font='11px sans-serif';
+ arrow(WL-22,WL+22,170);cx.fillText('کاتیون‌ها',WL,163);
+ arrow(WL+22,WL-22,310);cx.fillText('آنیون‌ها',WL,328);
+}
+function loop(n){draw(n/1000);requestAnimationFrame(loop)}
+const OUTSIDE={};
+(function(){
+ const M=['Au','Pt','Ag','Cu','Sn','Fe','Zn','Mn','Al','Mg'],put=(a,b,v)=>{OUTSIDE[[a,b].sort().join(',')]=v};
+ const gen='نمایش مفهومی: E° این زوج از E°های کتاب محاسبه شده است. این زوج در کتاب نیامده و عملی بودن آن اثبات نشده است.';
+ const A_GEN={g:'A',text:gen},A_PT={g:'A',text:gen+' اختلاف پتانسیل این زوج بسیار کوچک است؛ در شرایط غیراستاندارد ممکن است جهت واکنش عوض شود.'},
+ A_SI={g:'A',text:'نمایش مفهومی: نیم‌واکنش SiO₂/Si در تمرین ۱۲ کتاب آمده است، اما این ترکیب دو نیم‌سلول در کتاب مطرح نشده و عملی بودن آن اثبات نشده است.'},
+ A_SIO2={g:'A',text:'نمایش مفهومی: نیم‌واکنش‌های SiO₂/Si و O₂/H₂O در تمرین‌های کتاب آمده‌اند، اما این ترکیب دو نیم‌سلول در کتاب مطرح نشده و عملی بودن آن اثبات نشده است.'},
+ B_BASE={g:'B',text:'نمایش نظری: در این زوج یک نیم‌سلول بازی (OH⁻) کنار نیم‌سلول نمک فلز قرار می‌گیرد. سازگاری شیمیایی این دو نیم‌سلول در این نمایش تأیید نشده است؛ بنابراین فقط محاسبه‌ی نظری نمایش داده می‌شود.'},
+ B_SIO2={g:'B',text:'نمایش نظری: در این زوج باید SiO₂ جامد در کاتد به Si کاهش یابد. وقوع این نیم‌واکنش در محلول آبی اثبات نشده است، پس فقط محاسبه‌ی نظری نمایش داده می‌شود.'},
+ B_PH={g:'B',title:'سلول وابسته به اختلاف pH',text:'نمایش نظری: این زوج یک نیم‌واکنش هیدروژن را در دو محیط (اسیدی و بازی) نشان می‌دهد. ۰٫۸۳ V اثر اختلاف pH است و واکنش کلی خنثی‌شدن OH⁻ + H⁺ → H₂O است. در تماس مستقیم، اسید و باز با هم واکنش می‌دهند.'},
+ B_HYB={g:'B',text:'نمایش نظری: محلول بازی (آند) و محلول اسیدی (کاتد) اگر با هم در تماس باشند، واکنش خنثی‌شدن می‌دهند و اختلاف pH حفظ نمی‌شود. ۲٫۰۶ V = ۱٫۲۳ + ۰٫۸۳ فقط محاسبه‌ی نظری است.'};
+ M.forEach(m=>{put(m,'O2',m==='Pt'?A_PT:A_GEN);put(m,'OH',B_BASE);put(m,'Si',['Mn','Al','Mg'].includes(m)?B_SIO2:A_SI)});
+ put('H','Si',A_SI);put('Si','O2',A_SIO2);put('H','OH',B_PH);put('OH','O2',B_HYB);
+})();
+const T1SET=new Set(['Au','Pt','Ag','Cu','H','Sn','Fe','Zn','Mn','Al','Mg']);
+// priority: same -> Table 1 -> book exercises -> group A / B (order of the two selections never matters)
+function statusOf(a,b){
+ if(a===b)return{g:'SAME'};
+ if(T1SET.has(a)&&T1SET.has(b))return{g:'T1'};
+ const key=[a,b].sort().join(',');
+ if(key==='H,O2')return{g:'EX3',text:'تمرین ۳ کتاب (ص ۵۳).'};
+ if(key==='OH,Si')return{g:'EX12',text:'تمرین ۱۲ کتاب، صفحهٔ ۶۵: سلول نور الکتروشیمیایی. emf محاسبه‌شده برابر ۰٫۰۱ V است.'};
+ return OUTSIDE[key]||{g:'?'};
+}
+function calc(f){calc0(f);applyView()}
+function applyView(){
+ const S=st.S||{g:'?'},g=S.g,B=g==='B',X=g==='EX12',show=(id,on)=>{$(id).style.display=on?'':'none'};
+ show('vcell',!B&&!X);show('vslider',!B&&!X);show('vtheory',B);show('vex12',X);
+ show('rcond',!B);show('remf',!B);show('no',!B&&!X);show('why',!B&&!X);show('flip',!B&&!X);show('cnote',!B&&!X);
+ $('med').className='tag';$('med').innerHTML=(g==='A'||g==='EX3'||g==='EX12')?bdi(S.text):'';show('med',!B);
+ if(B)fillTheory(S);if(X)fillEx12();
+}
+function fillTheory(S){
+ const A=st.A,C=st.C;if(!A||!C)return;
+ const L=t=>'\u2066'+t+'\u2069',row=(X,t)=>'<tr><td>'+X.name+'</td><td class="h">'+L(side(X.lhs,1)+' + '+X.z+'e⁻ → '+side(X.rhs,1))+'</td><td dir="ltr">'+sg(X.E)+'<br><span class="tag">'+t+'</span></td></tr>';
+ $('vtheory').innerHTML='<div class="tban">'+(S.title||'نمایش نظری')+'</div><p class="tbody">'+bdi(S.text.replace(/^نمایش نظری:\s*/,''))+'</p>'
+ +'<div class="tag">ورودی‌های محاسبه: پتانسیل‌های کاهشی استاندارد (E°) از جدول کتاب</div>'
+ +'<table><tr><th>نیم‌سلول</th><th>نیم‌واکنش کاهش</th><th>E° (V)</th></tr>'+row(C,'E° بالاتر')+row(A,'E° پایین‌تر')+'</table>'
+ +'<div class="tres">اختلاف پتانسیل محاسبه‌شده (نظری) = E°<sub>بالاتر</sub> − E°<sub>پایین‌تر</sub></div>'
+ +'<div class="tres" dir="ltr" style="unicode-bidi:isolate;text-align:center;font-size:1.2rem">('+sg(C.E)+') − ('+sg(A.E)+') = '+st.E0.toFixed(2)+' V</div>'
+ +'<div class="tag">در این محاسبه، E° بالاتر منهای E° پایین‌تر گرفته می‌شود. این فقط تفاضل عددی است؛ نقش آند و کاتد در یک سلول عملی را نشان نمی‌دهد و ولتاژ اندازه‌گیری‌شده‌ی سلول نیست.</div>';
+}
+function fillEx12(){
+ const A=st.A,C=st.C;if(!A||!C)return;
+ const n=st.ma*A.z,ne=n==1?'e⁻':n+'e⁻',L=t=>'\u2066'+t+'\u2069',
+ e1=L(side(A.rhs,st.ma)+' → '+side(A.lhs,st.ma)+' + '+ne),e2=L(side(C.lhs,st.mc)+' + '+ne+' → '+side(C.rhs,st.mc));
+ let rays='';for(let i=0;i<8;i++){const a=i*Math.PI/4,c=Math.cos(a),s=Math.sin(a);rays+='<line x1="'+(210+c*20).toFixed(1)+'" y1="'+(34+s*20).toFixed(1)+'" x2="'+(210+c*28).toFixed(1)+'" y2="'+(34+s*28).toFixed(1)+'"/>'}
+ $('vex12').innerHTML='<svg viewBox="0 0 420 340" style="width:100%;max-width:480px;height:auto;display:block;margin:0 auto" role="img" aria-label="نمودار ثابت دو نیم‌واکنش تمرین ۱۲">'
+ +'<g stroke="#f5b301" stroke-width="3" stroke-linecap="round">'+rays+'</g><circle cx="210" cy="34" r="13" fill="#f5b301"/>'
+ +'<text x="250" y="40" fill="var(--mut)" font-size="15">نور</text>'
+ +'<g stroke="var(--fg)" stroke-width="2" fill="none" stroke-linecap="round"><path d="M210 66V90"/><path d="M203 83l7 8 7-8"/><path d="M210 176V204"/><path d="M203 197l7 8 7-8"/></g>'
+ +'<g stroke="var(--gl)" stroke-width="2" fill="none"><rect x="20" y="96" width="380" height="80" rx="10"/><rect x="20" y="210" width="380" height="80" rx="10"/></g>'
+ +'<g font-size="16" text-anchor="middle"><text x="210" y="122" font-weight="700" fill="var(--neg)">نیم‌واکنش اکسایش · Si</text><text x="210" y="154" fill="var(--fg)">'+e1+'</text>'
+ +'<text x="236" y="196" fill="var(--fg)" font-size="15">e⁻</text>'
+ +'<text x="210" y="236" font-weight="700" fill="var(--pos)">نیم‌واکنش کاهش · H₂O/H₂</text><text x="210" y="268" fill="var(--fg)">'+e2+'</text>'
+ +'<text x="210" y="314" fill="var(--mut)" font-size="13">این نمودار فقط ارتباط دو نیم‌واکنش را نشان می‌دهد،</text><text x="210" y="332" fill="var(--mut)" font-size="13">نه نقشه‌ی دستگاه واقعی.</text></g></svg>';
+}
+const FX=['OH⁻ + H⁺ → H₂O','۲٫۰۶ V = ۱٫۲۳ + ۰٫۸۳','۰٫۸۳ V','۰٫۰۱ V','SiO₂/Si','O₂/H₂O','O₂/H⁺','SiO₂','OH⁻','pH','emf'];
+function bdi(t){let o=t;const h=[];FX.forEach(f=>{o=o.split(f).join('\u0001'+h.push(f)+'\u0002')});return o.replace(/\u0001(\d+)\u0002/g,(m,i)=>'<bdi dir="ltr">'+h[i-1]+'</bdi>')}
+let pk='';
+const nmo=X=>X.name+' ('+X.rhs[0][1]+')';
+function buildPred(){const k1=s1.value,k2=s2.value,X=K[k1],Y=K[k2],ok=k1!=k2&&X.kind=='m'&&Y.kind=='m';
+ $('pq').style.display=ok?'block':'none';$('pnote').style.display=ok?'none':'block';
+ if(!ok){pk='';return}
+ if(pk==k1+k2)return;pk=k1+k2;$('pres').textContent='';
+ const fill=(id,a)=>{$(id).innerHTML='<option value="">— انتخاب کنید —</option>'+a.map(x=>'<option value="'+x[0]+'">'+x[1]+'</option>').join('')};
+ fill('p1',[[k1,nmo(X)],[k2,nmo(Y)]]);fill('p2',[[k1,'از '+nmo(X)+' به '+nmo(Y)],[k2,'از '+nmo(Y)+' به '+nmo(X)]]);fill('p3',[[k1,X.ion],[k2,Y.ion]])}
+$('pchk').addEventListener('click',()=>{const a=st.A,c=st.C;if(st.same||a.kind!='m'||c.kind!='m')return;
+ const v=[$('p1').value,$('p2').value,$('p3').value];
+ if(v.includes('')){$('pres').textContent='ابتدا هر سه پرسش را پاسخ دهید.';return}
+ const r=v.map(x=>x==a.k),
+ ex=['الکترودی که اکسایش می‌یابد (آند) جرمش کم می‌شود؛ '+($('ne').checked?'جهت واکنش با توجه به E و غلظت‌های انتخاب‌شده تعیین می‌شود و آند این است: ':'این همان الکترود با E° کمتر است: ')+nmo(a)+($('ne').checked?'.':' ('+'\u2066'+sg(a.E)+'\u2069 در برابر \u2066'+sg(c.E)+'\u2069'+').'),
+ 'الکترون‌ها از آند به کاتد می‌روند، یعنی از '+nmo(a)+' به '+nmo(c)+'.',
+ 'در آند اتم فلز به یون تبدیل می‌شود؛ پس غلظت '+a.ion+' زیاد و غلظت '+c.ion+' کم می‌شود.'];
+ $('pres').innerHTML=r.map((t,i)=>(t?'✅ ':'❌ ')+(i+1)+') '+ex[i]).join('<br>')+'<br><span class="tag">حالا لغزنده‌ی پیشرفت واکنش را بکشید و درستی پیش‌بینی را ببینید.</span>'});
+['s1','s2'].forEach(i=>{$(i).addEventListener('change',buildPred);$(i).addEventListener('input',buildPred)});
+['ne','r1','r2'].forEach(i=>$(i).addEventListener('input',()=>{$('pres').textContent=''}));
+calc();buildPred();requestAnimationFrame(loop);
+</script>
+</body>
+</html>
