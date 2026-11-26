@@ -1,0 +1,14 @@
+{
+  "id": "/shimi3-galvanic-cell/platform/",
+  "name": "جاوید | آموزش تعاملی شیمی",
+  "short_name": "شیمی جاوید",
+  "description": "درگاه آموزش تعاملی شیمی، گروه شیمی استان کرمان",
+  "lang": "fa",
+  "dir": "rtl",
+  "start_url": "/shimi3-galvanic-cell/platform/",
+  "scope": "/shimi3-galvanic-cell/platform/",
+  "display": "standalone",
+  "background_color": "#081827",
+  "theme_color": "#102b46",
+  "icons": [{"src":"./icon.svg","sizes":"any","type":"image/svg+xml","purpose":"any maskable"}]
+}
